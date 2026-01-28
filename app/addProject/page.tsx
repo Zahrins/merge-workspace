@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 
 export default function AddProject() {
   const [projectTitle, setProjectTitle] = useState('');
-  const [deadline, setDeadline] = useState('');
+  const [deadlineProject, setDeadlineProject] = useState('');
   const [isLarge, setIsLarge] = useState(false);
   useEffect(() => {
     const checkScreen = () => setIsLarge(window.innerWidth >= 1024);
@@ -33,7 +33,7 @@ export default function AddProject() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token') || ''}`,
         },
-        body: JSON.stringify({ projectTitle, deadline }),
+        body: JSON.stringify({ projectTitle, deadlineProject }),
       });
       const responseData = await response.json(); 
       if (response.ok) {
@@ -108,9 +108,9 @@ export default function AddProject() {
               <div className="mb-5">
                 <label className="mb-4 text-sm font-medium text-black">Deadline</label>
                 <input type="date" 
-                        id="deadline" 
-                        value={deadline}
-                        onChange={(e) => setDeadline(e.target.value)}
+                        id="deadlineProject" 
+                        value={deadlineProject}
+                        onChange={(e) => setDeadlineProject(e.target.value)}
                         className="autofill:shadow-[inset_0_0_0px_1000px_white] outline-none focus:outline-none focus:bg-white focus:border focus:border-black border border-black rounded-3xl text-slate-800 text-sm focus:ring-brand focus:border-brand block w-full px-3 py-2.5 placeholder:text-body placeholder:text-slate-500" required />
               </div>
               <div className="mb-5">

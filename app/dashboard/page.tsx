@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 
 export default function DashboardPage() {
   const [username, setUsername] = useState('');
@@ -12,48 +12,96 @@ export default function DashboardPage() {
   }
 
   useEffect(() => {
-    const storedUsername = localStorage.getItem('username');
-    const storedEmail = localStorage.getItem('email');
-    if (storedUsername) {
-      setUsername(storedUsername);
-    }
-    if (storedEmail) {
-      setEmail(storedEmail);
-    }
+    fetch('/api/userData', {
+      credentials: 'include',
+    })
+      .then(res => res.json())
+      .then(data => {
+        setUsername(data.username);
+        setEmail(data.email);
+      });
   }, []);
 
-  return (
-    <div className="flex flex-col h-screen w-full bg-white">
-      <div className='flex p-10 justify-between items-center'>
-        <div data-dropdown-toggle="userDropdown" data-dropdown-placement="bottom-start"  className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold text-sm shadow-sm">
-          {getInitials(username)}
-        </div>
-        <div id="userDropdown" className="z-10 hidden bg-neutral-primary-medium border border-default-medium rounded-base shadow-lg w-44">
-            <div className="px-4 py-3 border-b border-default-medium text-sm text-heading">
-              <div className="font-medium">{username}</div>
-              <div className="truncate">{email}</div>
-            </div>
-        </div>
-        <Link href="/addProject" className="text-white bg-black active:scale-95 transition-all duration-300 ease-out font-medium leading-5 rounded-base text-sm rounded-3xl px-4 py-2.5 focus:outline-none">
-          Project <span className="material-symbols-outlined">add</span>
-        </Link>
-      </div>
+  const [projectTitle, setProjectTitle] = useState('');
+  const [collaborators, setCollaborators] = useState('');
+  const [deadline, setDeadline] = useState('');
 
-      <div className='lg:flex'>
-        <div className='p-10 mb-5 lg:w-2/5'>
-          <h1 className="text-2xl font-bold text-black ">Hallo,</h1>
-          <h1 className="text-4xl font-bold text-black">{username}</h1>
+  useEffect(() => {
+    fetch('/api/projectData', {
+      credentials: 'include',
+    })
+      .then(res => res.json())
+      .then(data => {
+        setProjectTitle(data.projectTitle);
+        setCollaborators(data.collaborators);
+        setDeadline(data.deadline);
+      });
+  }, []);
+
+  const [isLarge, setIsLarge] = useState(false);
+  useEffect(() => {
+    const checkScreen = () => setIsLarge(window.innerWidth >= 1024);
+    checkScreen(); 
+    window.addEventListener('resize', checkScreen);
+    return () => window.removeEventListener('resize', checkScreen);
+  }, []);
+  const workspaceClipPath = isLarge
+    ? 'ellipse(100% 100% at 100% 30%)'
+    : undefined;
+
+  return (
+    <div className="flex flex-col lg:flex-row h-screen w-full bg-white">
+      <div className='lg:w-2/5'>
+        <div className='flex p-6 justify-between w-full items-center'>
+            <div data-dropdown-toggle="userDropdown" data-dropdown-placement="bottom-start"  className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center text-white font-semibold text-sm shadow-sm">
+              {getInitials(username)}
+            </div>
+            <div id="userDropdown" className="z-10 hidden bg-neutral-primary-medium border border-default-medium rounded-base shadow-lg w-44">
+                <div className="px-4 py-3 border-b border-default-medium text-sm text-heading">
+                  <div className="font-medium">{username}</div>
+                  <div className="truncate">{email}</div>
+                </div>
+            </div>
+            <Link href="/addProject" className="lg:hidden flex items-center gap-2 lg:self-end text-white bg-black hover:scale-110 transition-transform active:scale-95 font-medium rounded-3xl px-4 py-2.5 w-fit">
+              Project <span className="material-symbols-outlined">add</span>
+            </Link>
+        </div>
+
+        <div className='p-6 mb-4 w-full'>
+          <div className='lg:mb-10'>
+            <h1 className="text-2xl font-bold text-black ">Hallo,</h1>
+            <h1 className="text-4xl font-bold text-black">Zahrin{username}</h1>
+          </div>
 
           <a className='text-black'>Heads up! A task deadline is approaching.</a>
           <div className='flex flex-col bg-[#F7C873] p-5 rounded-lg mt-3 border border-black'>
-            <h5 className='text-black'>Implement Login Feature (Task Title)</h5>
-            <a className='text-black'>On Web App (Project Title)</a>
-            <a className='text-black'>Deadline: Jan 22, 2026 (Deadline)</a>
+            <h5 className='text-black text-[16px]'>Implement Login Feature (Task Title)</h5>
+            <p className='text-gray-500 text-[14px] font-light'>On Web App (Project Title)</p>
+            <p className='text-gray-500 text-[14px] font-light'>Deadline: Jan 22, 2026 (Deadline)</p>
           </div>
         </div>
+      </div>
+      
 
-        <div className='lg:w-3/5 border border-black h-full w-full rounded-t-4xl lg:rounded-l-4xl rounded-tr-3xl p-10'>
-          <h4 className='text-black'>Workspace Projects</h4>
+      <div className='flex flex-col lg:w-3/5 border border-black h-full w-full rounded-t-[50px] lg:rounded-l-[60px] lg:rounded-tr-none p-10'>
+        <Link href="/addProject" className="hidden lg:flex items-center gap-2 lg:self-end text-white bg-black hover:scale-110 transition-transform active:scale-95 font-medium rounded-3xl px-4 py-2.5 w-fit">
+          Project 
+          <span className="material-symbols-outlined">add</span>
+        </Link>
+
+        <div className='lg:mt-10'>
+          <h4 className='text-black font-semibold mb-5 text-xl'>Workspace Projects</h4>
+          <div className='border-b border-b-black p-2 hover:bg-slate-50 rounded-t-2xl mb-3 cursor-pointer'>
+            <h5 className='text-black font-medium text-[16px] mb-2'>Project Title{projectTitle}</h5>
+            <div className='flex flex-row items-center'>
+              <span className="material-symbols-outlined text-slate-600 mr-3">groups</span>
+              <p className='text-slate-700 text-[14px] font-light'>3 collaborators{collaborators}</p>
+            </div>
+            <div className='flex flex-row items-center mb-3'>
+              <span className="material-symbols-outlined text-orange-800 mr-3 text-[10px]">alarm</span>
+              <p className='text-slate-700 text-[14px] font-light'>Deadline: Jan 22, 2026{deadline}</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
