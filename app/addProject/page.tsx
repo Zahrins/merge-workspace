@@ -6,6 +6,10 @@ import { useEffect, useState } from "react";
 export default function AddProject() {
   const [projectTitle, setProjectTitle] = useState('');
   const [deadlineProject, setDeadlineProject] = useState('');
+  const [contributors, setContributors] = useState<string[]>([]);
+  const [showInput, setShowInput] = useState(false);
+  const [tempEmail, setTempEmail] = useState('');
+  const colors = ["#AFC1E8", "#FFE1B8", "#CBCBCB", "#CFE6CF", "#F7C6D9"];
   const [isLarge, setIsLarge] = useState(false);
   useEffect(() => {
     const checkScreen = () => setIsLarge(window.innerWidth >= 1024);
@@ -114,17 +118,61 @@ export default function AddProject() {
                         className="autofill:shadow-[inset_0_0_0px_1000px_white] outline-none focus:outline-none focus:bg-white focus:border focus:border-black border border-black rounded-3xl text-slate-800 text-sm focus:ring-brand focus:border-brand block w-full px-3 py-2.5 placeholder:text-body placeholder:text-slate-500" required />
               </div>
               <div className="mb-5">
-                <div className="mb-5 text-sm font-medium text-black">Invite Contributors</div>
-                <div className="flex -space-x-4 rtl:space-x-reverse">
-                  <img className="w-10 h-10 border-2 border-buffer rounded-full" alt="" />
-                  <img className="w-10 h-10 border-2 border-buffer rounded-full" alt="" />
-                  <img className="w-10 h-10 border-2 border-buffer rounded-full" alt="" />
-                  <a className="flex items-center justify-center w-10 h-10 text-xs font-medium text-white bg-dark-strong border-2 border-buffer rounded-full" href="#">+99</a>
+                <div className="mb-5 text-sm font-medium text-black flex justify-between items-center">
+                  Invite Contributors
+                  {contributors.length > 0 && (
+                    <span className="text-xs text-slate-500">{contributors.length} invited</span>
+                  )}
                 </div>
+
+                <div className="flex items-center space-x-2">
+                  <div className="flex -space-x-4 rtl:space-x-reverse">
+                    {contributors.slice(0, 5).map((email, i) => (
+                      <div 
+                        key={i} 
+                        title={email}
+                        className="w-10 h-10 border-2 rounded-full bg-slate-200 text-black flex items-center justify-center text-[10px] overflow-hidden"
+                        style={{ backgroundColor: colors[i % colors.length] }}>
+                        {email.substring(0, 2).toUpperCase()}
+                      </div>
+                    ))}
+                    
+                    <button 
+                      type="button"
+                      onClick={() => setShowInput(!showInput)}
+                      className="flex items-center justify-center w-10 h-10 text-xs font-medium text-white bg-black border-2 border-white rounded-full hover:bg-slate-800 transition-colors"
+                    >
+                      {showInput ? <span className="material-symbols-outlined text-sm">close</span> : `+${contributors.length > 5 ? contributors.length - 5 : ''}`}
+                    </button>
+                  </div>
+                </div>
+
+                {showInput && (
+                  <div className="mt-3 flex gap-2">
+                    <input 
+                      type="email"
+                      value={tempEmail}
+                      onChange={(e) => setTempEmail(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault();
+                          if (tempEmail.includes('@')) {
+                            setContributors([...contributors, tempEmail]);
+                            setTempEmail('');
+                            setShowInput(false);
+                          }
+                        }
+                      }}
+                      placeholder="Enter email..."
+                      className="flex-1 border border-black rounded-3xl px-3 py-1.5 text-sm text-slate-800 outline-none"
+                      autoFocus
+                    />
+                  </div>
+                )}
               </div>
 
               <button type="submit" 
-                      className="mt-10 flex justify-center items-center text-white bg-black active:scale-95 transition-all duration-300 ease-out focus:ring-4 focus:ring-brand-medium shadow-xs font-medium leading-5 rounded-base text-lg w-full rounded-3xl px-4 py-2.5 focus:outline-none">
+                      className="mt-10 flex justify-center items-center text-white bg-black active:scale-95 transition-all duration-300 ease-out shadow-xs font-medium leading-5 rounded-base text-lg w-full rounded-3xl px-4 py-2.5 focus:outline-none">
                 Create & Invite
               </button>
           </form>

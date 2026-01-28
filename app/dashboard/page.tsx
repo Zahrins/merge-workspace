@@ -38,17 +38,6 @@ export default function DashboardPage() {
       });
   }, []);
 
-  const [isLarge, setIsLarge] = useState(false);
-  useEffect(() => {
-    const checkScreen = () => setIsLarge(window.innerWidth >= 1024);
-    checkScreen(); 
-    window.addEventListener('resize', checkScreen);
-    return () => window.removeEventListener('resize', checkScreen);
-  }, []);
-  const workspaceClipPath = isLarge
-    ? 'ellipse(100% 100% at 100% 30%)'
-    : undefined;
-
   return (
     <div className="flex flex-col lg:flex-row h-screen w-full bg-white">
       <div className='lg:w-2/5'>
