@@ -87,14 +87,14 @@ export default function SignUp() {
         <div
           className="bg-[#F7C873] h-full rounded-b-[50px] lg:rounded-none mb-5 lg:mb-0 p-15 text-start text-black font-bold text-3xl"
           style={isLarge ? { clipPath: signInClipPath } : undefined}>
-          <div className="lg:hidden">
+          <div className="lg:hidden p-10">
             <h2>Hay,</h2>
-            <h4>Sign Up Now</h4>
+            <h4 className='mb-3'>Sign Up Now</h4>
           </div>
         </div>
       </div>
 
-      <div className="flex mt-0 lg:justify-center lg:items-center h-full w-full">
+      <div className="flex mt-0 lg:justify-center lg:items-center h-full w-full p-5">
           <form onSubmit={handleConnect} className="flex flex-col w-full p-5 max-w-sm mx-auto px-18 lg:px-0 mt-0">
               <div className='hidden lg:block text-start text-black font-bold text-3xl mb-10'>
                 <h2>Hay,</h2>

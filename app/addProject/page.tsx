@@ -6,10 +6,10 @@ import { useEffect, useState } from "react";
 export default function AddProject() {
   const [projectTitle, setProjectTitle] = useState('');
   const [deadlineProject, setDeadlineProject] = useState('');
-  const [contributors, setContributors] = useState<string[]>([]);
+  const [collaborators, setCollaborators] = useState<string[]>([]);
   const [showInput, setShowInput] = useState(false);
   const [tempEmail, setTempEmail] = useState('');
-  const colors = ["#AFC1E8", "#FFE1B8", "#CBCBCB", "#CFE6CF", "#F7C6D9"];
+  const colors = ["#4C63B6", "#E09F3E", "#8A8A8A", "#4CAF87", "#C94A6A"];
   const [isLarge, setIsLarge] = useState(false);
   useEffect(() => {
     const checkScreen = () => setIsLarge(window.innerWidth >= 1024);
@@ -31,13 +31,13 @@ export default function AddProject() {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await fetch('/api/create-project', {
+      const response = await fetch('/api/create_project', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token') || ''}`,
         },
-        body: JSON.stringify({ projectTitle, deadlineProject }),
+        body: JSON.stringify({ projectTitle, deadlineProject, collaborators }),
       });
       const responseData = await response.json(); 
       if (response.ok) {
@@ -119,15 +119,15 @@ export default function AddProject() {
               </div>
               <div className="mb-5">
                 <div className="mb-5 text-sm font-medium text-black flex justify-between items-center">
-                  Invite Contributors
-                  {contributors.length > 0 && (
-                    <span className="text-xs text-slate-500">{contributors.length} invited</span>
+                  Invite Collaborators
+                  {collaborators.length > 0 && (
+                    <span className="text-xs text-slate-500">{collaborators.length} invited</span>
                   )}
                 </div>
 
                 <div className="flex items-center space-x-2">
                   <div className="flex -space-x-4 rtl:space-x-reverse">
-                    {contributors.slice(0, 5).map((email, i) => (
+                    {collaborators.slice(0, 5).map((email, i) => (
                       <div 
                         key={i} 
                         title={email}
@@ -142,7 +142,7 @@ export default function AddProject() {
                       onClick={() => setShowInput(!showInput)}
                       className="flex items-center justify-center w-10 h-10 text-xs font-medium text-white bg-black border-2 border-white rounded-full hover:bg-slate-800 transition-colors"
                     >
-                      {showInput ? <span className="material-symbols-outlined text-sm">close</span> : `+${contributors.length > 5 ? contributors.length - 5 : ''}`}
+                      {showInput ? <span className="material-symbols-outlined text-sm">close</span> : `+${collaborators.length > 5 ? collaborators.length - 5 : ''}`}
                     </button>
                   </div>
                 </div>
@@ -157,7 +157,7 @@ export default function AddProject() {
                         if (e.key === 'Enter') {
                           e.preventDefault();
                           if (tempEmail.includes('@')) {
-                            setContributors([...contributors, tempEmail]);
+                            setCollaborators([...collaborators, tempEmail]);
                             setTempEmail('');
                             setShowInput(false);
                           }

@@ -7,7 +7,7 @@ export default function AddProject() {
   const [taskTitle, setTaskTitle] = useState('');
   const [taskDesc, setTaskDesc] = useState('');
   const [assignTo, setAssignTo] = useState('');
-  const [deadlineTask, setDeadlineTask] = useState('');
+  const [TaskDeadline, setTaskDeadline] = useState('');
   const [isLarge, setIsLarge] = useState(false);
   useEffect(() => {
     const checkScreen = () => setIsLarge(window.innerWidth >= 1024);
@@ -35,7 +35,7 @@ export default function AddProject() {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token') || ''}`,
         },
-        body: JSON.stringify({ taskTitle, taskDesc, assignTo, deadlineTask }),
+        body: JSON.stringify({ taskTitle, taskDesc, assignTo, TaskDeadline }),
       });
       const responseData = await response.json(); 
       if (response.ok) {
@@ -134,8 +134,8 @@ export default function AddProject() {
                 <label className="mb-4 text-sm font-medium text-black">Deadline</label>
                 <input type="date" 
                         id="deadlineTask" 
-                        value={deadlineTask}
-                        onChange={(e) => setDeadlineTask(e.target.value)}
+                        value={TaskDeadline}
+                        onChange={(e) => setTaskDeadline(e.target.value)}
                         className="autofill:shadow-[inset_0_0_0px_1000px_white] outline-none focus:outline-none focus:bg-white focus:border focus:border-black border border-black rounded-3xl text-slate-800 text-sm focus:ring-brand focus:border-brand block w-full px-3 py-2.5 placeholder:text-body placeholder:text-slate-500" required />
               </div>
 

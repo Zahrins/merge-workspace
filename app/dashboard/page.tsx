@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { use, useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function DashboardPage() {
   const [username, setUsername] = useState('');
@@ -22,9 +23,8 @@ export default function DashboardPage() {
       });
   }, []);
 
-  const [projectTitle, setProjectTitle] = useState('');
-  const [collaborators, setCollaborators] = useState('');
-  const [deadline, setDeadline] = useState('');
+  const [projects, setProjects] = useState<any[]>([]);
+  const router = useRouter();
 
   useEffect(() => {
     fetch('/api/projectData', {
@@ -32,9 +32,7 @@ export default function DashboardPage() {
     })
       .then(res => res.json())
       .then(data => {
-        setProjectTitle(data.projectTitle);
-        setCollaborators(data.collaborators);
-        setDeadline(data.deadline);
+        setProjects(data.projects);
       });
   }, []);
 
@@ -78,20 +76,35 @@ export default function DashboardPage() {
           <span className="material-symbols-outlined">add</span>
         </Link>
 
-        <div className='lg:mt-10'>
-          <h4 className='text-black font-semibold mb-5 text-xl'>Workspace Projects</h4>
-          <div className='border-b border-b-black p-2 hover:bg-slate-50 rounded-t-2xl mb-3 cursor-pointer'>
-            <h5 className='text-black font-medium text-[16px] mb-2'>Project Title{projectTitle}</h5>
-            <div className='flex flex-row items-center'>
-              <span className="material-symbols-outlined text-slate-600 mr-3">groups</span>
-              <p className='text-slate-700 text-[14px] font-light'>3 collaborators{collaborators}</p>
-            </div>
-            <div className='flex flex-row items-center mb-3'>
-              <span className="material-symbols-outlined text-orange-800 mr-3 text-[10px]">alarm</span>
-              <p className='text-slate-700 text-[14px] font-light'>Deadline: Jan 22, 2026{deadline}</p>
-            </div>
+        <h4 className='text-black font-semibold mb-5 text-xl mt-10'>Workspace Projects</h4>
+        {projects.length === 0 ? (
+          <div className='flex flex-col justify-center items-center lg:mt-20 mt-4 space-y-4'>
+            <span className="material-symbols-outlined"
+                  style={{ fontSize: '60px' }}>
+              folder_open
+            </span>
+            <p className='text-slate-600 flex justify-center'>No projects found. Create a new project to get started!</p>
           </div>
-        </div>
+        ) : (
+          <>
+            <p className='text-slate-600'>You have {projects.length} projects.</p>
+            {projects.map(project => (
+              <Link href={`/projectTask/${project.id}`} key={project.id} className="lg:mt-4 block">
+                <div className='border-b border-b-black p-2 hover:bg-slate-50 rounded-t-2xl mb-3 cursor-pointer'>
+                  <h5 className='text-black font-medium text-[16px] mb-2'>Project Title{project.projectTitle}</h5>
+                  <div className='flex flex-row items-center'>
+                    <span className="material-symbols-outlined text-slate-600 mr-3">groups</span>
+                    <p className='text-slate-700 text-[14px] font-light'>{project.collaborators.length} collaborators</p>
+                  </div>
+                  <div className='flex flex-row items-center mb-3'>
+                    <span className="material-symbols-outlined text-orange-800 mr-3 text-[10px]">alarm</span>
+                    <p className='text-slate-700 text-[14px] font-light'>Deadline: Jan 22, 2026{project.deadline}</p>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </>
+        )}
       </div>
     </div>
   );

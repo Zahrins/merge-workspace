@@ -119,19 +119,33 @@ export default function SignIn() {
           <div 
             className="absolute bottom-0 lg:w-1/4 lg:h-full lg:right-0 w-full h-48 bg-[#F7C873] flex flex-col items-center justify-center pt-10"
             style={{ clipPath: clipPathValue }}>
+            <span className="hidden lg:flex items-center gap-2 text-sm text-gray-600 font-medium">
+              Swipe to continue
+              <span className="material-symbols-outlined text-base">
+                arrow_forward_ios
+              </span>  
+            </span>
+
+            <svg
+              className="lg:hidden w-6 h-6 text-gray-800 animate-bounce"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24">
+              <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M12 6v13m0-13 4 4m-4-4-4 4"/>
+            </svg>
+            
             <span className="lg:hidden text-sm text-gray-600 font-medium">
               Swipe up to continue
             </span>
-            <span className="hidden lg:block text-sm text-gray-600 font-medium">
-              Swipe to continue
-              <span className="material-symbols-outlined p-4">arrow_forward_ios</span>  
-            </span>
-            <svg className="lg:hidden w-6 h-6 text-gray-800 dark:text-white animate-bounce" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-              <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v13m0-13 4 4m-4-4-4 4"/>
-            </svg>
           </div>
+
         </div>
-        
       </SwiperSlide>
 
       <SwiperSlide className='bg-white'>
@@ -141,14 +155,14 @@ export default function SignIn() {
             <div
               className="bg-[#F7C873] h-full rounded-b-[50px] lg:rounded-none mb-10 lg:mb-0 p-15 text-start text-black font-bold text-3xl"
               style={isLarge ? { clipPath: signInClipPath } : undefined}>
-              <div className="lg:hidden">
+              <div className="lg:hidden p-10">
                 <h2>Hay,</h2>
-                <h4>Sign In Now</h4>
+                <h4 className='mb-3'>Sign In Now</h4>
               </div>
             </div>
           </div>
 
-          <div className="flex mt-10 lg:mt-0 lg:justify-center lg:items-center h-full w-full">
+          <div className="flex mt-10 lg:mt-0 lg:justify-center lg:items-center h-full w-full p-5">
             <form onSubmit={handleConnect} className="flex flex-col w-full p-5 max-w-sm mx-auto px-18 lg:px-0 mt-0">
               <div className='hidden lg:block text-start text-black font-bold text-4xl mb-10'>
                 <h2>Hay,</h2>
